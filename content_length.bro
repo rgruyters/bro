@@ -12,9 +12,9 @@ event file_state_remove(f: fa_file)
     if ( ! f?$total_bytes || f$total_bytes != f$seen_bytes )
     {
 
-      for ( id in f$conns )
+      for ( a in f$info$tx_hosts )
       {
-        src_host = id$resp_h;
+        src_host = a;
       }
 
       print fmt("%s: Wrong body size from host: %s. (%d versus %d)", strftime("%Y/%M/%d %H:%m:%S", f$http$ts), src_host, f$total_bytes, f$seen_bytes);
