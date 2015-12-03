@@ -3,8 +3,6 @@
 
 module BodyLength;
 
-global src_host = 0.0.0.0 &redef;
-
 export {
   redef enum Log::ID += { LOG };
 
@@ -13,6 +11,7 @@ export {
     orig_h:       addr &log;
     total_bytes:  count &log;
     seen_bytes:   count &log;
+    duration: interval &log &optional;
   };
 
 }
@@ -25,6 +24,7 @@ event bro_init()
 event file_state_remove(f: fa_file)
 {
   local now = network_time();
+  local c: connection;
 
   if ( f$info$source == "HTTP" )
   {
@@ -32,15 +32,17 @@ event file_state_remove(f: fa_file)
     if ( ! f?$total_bytes || f$total_bytes != f$seen_bytes )
     {
 
-      for ( h in f$info$tx_hosts )
+      for ( cid in f$conns )
       {
-        src_host = h;
+        c = f$conns[cid];
+        break;
       }
 
       local info: Info = [$ts=now,
-                          $orig_h=src_host,
+                          $orig_h=c$id$resp_h,
                           $total_bytes=f$total_bytes,
-                          $seen_bytes=f$seen_bytes];
+                          $seen_bytes=f$seen_bytes,
+                          $duration=c$duration];
 
       Log::write(LOG, info);
     }
