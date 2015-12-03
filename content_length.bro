@@ -8,10 +8,11 @@ export {
 
   type Info: record {
     ts:           time &log;
+    fuid:         string &log;
     orig_h:       addr &log;
     total_bytes:  count &log;
     seen_bytes:   count &log;
-    duration: interval &log &optional;
+    duration:     interval &log &optional;
   };
 
 }
@@ -39,6 +40,7 @@ event file_state_remove(f: fa_file)
       }
 
       local info: Info = [$ts=now,
+                          $fuid=f$info$fuid,
                           $orig_h=c$id$resp_h,
                           $total_bytes=f$total_bytes,
                           $seen_bytes=f$seen_bytes,
