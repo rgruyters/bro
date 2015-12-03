@@ -37,17 +37,12 @@ event file_state_remove(f: fa_file)
         src_host = h;
       }
 
-      local total_bytes = f$total_bytes;
-      local seen_bytes = f$seen_bytes;
-
       local info: Info = [$ts=now,
                           $orig_h=src_host,
-                          $total_bytes=total_bytes,
-                          $seen_bytes=seen_bytes];
+                          $total_bytes=f$total_bytes,
+                          $seen_bytes=f$seen_bytes];
 
       Log::write(LOG, info);
-
-      print fmt("%s: Wrong body size from host: %s. (%d versus %d)", strftime("%Y/%M/%d %H:%m:%S", f$http$ts), src_host, f$total_bytes, f$seen_bytes);
     }
 
   }
