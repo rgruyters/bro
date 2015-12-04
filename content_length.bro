@@ -1,6 +1,8 @@
 #
 # Bro script for capturing incomplete bodylength
 
+@load base/frameworks/notice
+
 module ContentLength;
 
 export {
