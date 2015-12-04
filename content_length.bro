@@ -1,7 +1,7 @@
 #
 # Bro script for capturing incomplete bodylength
 
-module BodyLength;
+module ContentLength;
 
 export {
   redef enum Log::ID += { LOG };
@@ -19,7 +19,7 @@ export {
 
 event bro_init()
 {
-  Log::create_stream(LOG, [$columns=Info, $path="bodylength"]);
+  Log::create_stream(LOG, [$columns=Info, $path="contentlength"]);
 }
 
 event file_state_remove(f: fa_file)
