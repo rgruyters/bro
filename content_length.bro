@@ -4,6 +4,13 @@
 module ContentLength;
 
 export {
+  redef enum Notice::Type += {
+    ## Generated if a login originates or responds with a host where
+    ## the reverse hostname lookup resolves to a name matched by the
+    ## :bro:id:`SSH::interesting_hostnames` regular expression.
+    Possible_Mismatch,
+  };
+
   redef enum Log::ID += { LOG };
 
   type Info: record {
@@ -47,6 +54,13 @@ event file_state_remove(f: fa_file)
                           $duration=c$duration];
 
       Log::write(LOG, info);
+
+      NOTICE([$note=Possible_Mismatch,
+        $msg=fmt("Possible mismatch of body size from host %s. (%d versus %d)",
+          c$id$resp_h,
+          f$total_bytes,
+          f$seen_bytes),
+        $conn=c]);
     }
 
   }
